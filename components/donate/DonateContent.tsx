@@ -36,6 +36,7 @@ export default function DonateContent() {
     const { id, value } = e.target;
     setFormData(prev => ({ ...prev, [id]: value }));
   };
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

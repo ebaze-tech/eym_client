@@ -25,18 +25,18 @@ export default function PartnerContent() {
     setStatus('loading');
     
     // Simulate API call
-    setTimeout(() => {
-      setStatus('success');
-      setMessage('Thank you for your interest in partnering with us! We will be in touch shortly.');
-      setFormData({
-        organizationName: '',
-        contactPerson: '',
-        email: '',
-        phoneNumber: '',
-        partnershipType: '',
-        message: ''
-      });
-    }, 1500);
+  //   setTimeout(() => {
+  //     setStatus('success');
+  //     setMessage('Thank you for your interest in partnering with us! We will be in touch shortly.');
+  //     setFormData({
+  //       organizationName: '',
+  //       contactPerson: '',
+  //       email: '',
+  //       phoneNumber: '',
+  //       partnershipType: '',
+  //       message: ''
+  //     });
+  //   }, 1500);
   };
 
   if (status === 'success') {

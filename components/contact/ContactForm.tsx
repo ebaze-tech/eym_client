@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Mail, Phone, MapPin, Send, Loader2, CheckCircle } from "lucide-react";
 
 export default function ContactForm() {
@@ -40,6 +40,15 @@ export default function ContactForm() {
         message: "",
       });
     }, 1500);
+
+    useEffect(() => {
+      const submitForm = async () => {
+        setStatus("loading");
+        try {
+          // const {data } = await axios.post(`${}/${}`);
+        } catch (error: any) {}
+      };
+    });
   };
 
   if (status === "success") {

@@ -26,19 +26,19 @@ export default function VolunteerForm() {
     setStatus('loading');
     
     // Simulate API call
-    setTimeout(() => {
-      setStatus('success');
-      setMessage('Thank you for volunteering! We will be in touch shortly.');
-      setFormData({
-        fullName: '',
-        email: '',
-        phoneNumber: '',
-        occupation: '',
-        skills: '',
-        interests: '',
-        availability: ''
-      });
-    }, 1500);
+    // setTimeout(() => {
+    //   setStatus('success');
+    //   setMessage('Thank you for volunteering! We will be in touch shortly.');
+    //   setFormData({
+    //     fullName: '',
+    //     email: '',
+    //     phoneNumber: '',
+    //     occupation: '',
+    //     skills: '',
+    //     interests: '',
+    //     availability: ''
+    //   });
+    // }, 1500);
   };
 
   if (status === 'success') {
