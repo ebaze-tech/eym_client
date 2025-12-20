@@ -99,7 +99,7 @@ export default function PartnerContent() {
               <CheckCircle className="w-10 h-10" />
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Inquiry Sent!
+              Partnership Request Sent!
             </h2>
             <p className="text-gray-600 mb-8 text-lg">
               Thank you for reaching out. We are excited about the possibility
@@ -109,7 +109,7 @@ export default function PartnerContent() {
               onClick={() => setStatus("idle")}
               className="bg-[#2B59C3] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#1a45a3] transition-colors"
             >
-              Send Another Inquiry
+              Send Another Request
             </button>
           </div>
         </div>
