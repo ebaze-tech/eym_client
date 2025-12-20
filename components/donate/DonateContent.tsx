@@ -13,8 +13,6 @@ import {
 import API from "@/api_handler/api";
 
 const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
-const DONATION_URL = process.env.DONATION_URL;
-
 interface DonationPayload {
   fullName: string;
   email: string;
@@ -22,6 +20,16 @@ interface DonationPayload {
   reference: string;
   message: string;
 }
+
+const formatAmount = (value: string) => {
+  const number = value.replace(/\D/g, "");
+  return number.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+const parseAmount = (value: string) => {
+  return value.replace(/,/g, "");
+};
+
 export default function DonateContent() {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [formData, setFormData] = useState({
@@ -76,7 +84,7 @@ export default function DonateContent() {
         message: formData.message,
       };
 
-      await API.post(`${NEXT_PUBLIC_API_URL}/${DONATION_URL}`, payload);
+      await API.post(`${NEXT_PUBLIC_API_URL}/donation`, payload);
 
       setStatus("success");
       setFormData({
@@ -279,12 +287,18 @@ export default function DonateContent() {
                       ₦
                     </span>
                     <input
-                      type="number"
+                      type="text"
                       id="amount"
+                      inputMode="numeric"
                       required
                       value={formData.amount}
-                      onChange={handleChange}
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-[#2B59C3] focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                      onChange={(e) => {
+                        const formatted = formatAmount(e.target.value);
+                        setFormData((prev) => ({ ...prev, amount: formatted }));
+                      }}
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200
+             focus:border-[#2B59C3] focus:ring-2 focus:ring-blue-100
+             outline-none transition-all"
                       placeholder="0.00"
                     />
                   </div>

@@ -4,7 +4,6 @@ import { Lock, User, ArrowRight, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
-const ADMIN_LOGIN = process.env.ADMIN_LOGIN;
 
 export default function LoginForm() {
   const router = useRouter();
@@ -29,7 +28,7 @@ export default function LoginForm() {
     setError("");
 
     try {
-      const response = await fetch(`${NEXT_PUBLIC_API_URL}/${ADMIN_LOGIN}`, {
+      const response = await fetch(`${NEXT_PUBLIC_API_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
