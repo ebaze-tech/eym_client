@@ -12,6 +12,8 @@ import {
   CheckCircle,
 } from "lucide-react";
 
+const MEMBERSHIP_REGISTRATION = process.env.MEMBERSHIP_REGISTRATION;
+const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function MembershipForm() {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -46,8 +48,9 @@ export default function MembershipForm() {
     setMessage("");
 
     try {
+      console.log("Error pane");
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/member-registration`,
+        `${NEXT_PUBLIC_API_URL}/member-registration`,
         {
           method: "POST",
           headers: {
