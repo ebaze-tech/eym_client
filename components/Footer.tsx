@@ -102,7 +102,7 @@ export default function Footer() {
             <div className="space-y-4">
               <div className="flex items-center gap-3 text-blue-100/80 text-sm group">
                 <Phone className="w-4 h-4 group-hover:text-[#2B59C3] transition-colors" />
-                <span>0703 268 8266</span>
+                <span>0703 268 8666</span>
               </div>
               <div className="flex items-center gap-3 text-blue-100/80 text-sm group">
                 <Mail className="w-4 h-4 group-hover:text-[#2B59C3] transition-colors" />

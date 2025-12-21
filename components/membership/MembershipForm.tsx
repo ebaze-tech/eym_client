@@ -14,6 +14,7 @@ import {
 import API from "@/api_handler/api";
 
 const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function MembershipForm() {
   const [formData, setFormData] = useState({
     fullName: "",
