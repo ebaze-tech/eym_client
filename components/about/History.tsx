@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ArrowRight, Clock } from 'lucide-react';
 
 export default function History() {
@@ -10,7 +11,7 @@ export default function History() {
           <div className="w-full lg:w-1/2 order-2 lg:order-1">
             <div className="relative rounded-3xl overflow-hidden h-125 shadow-2xl group">
               <Image 
-                src="/assets/images/atAGlance.png" 
+                src="/assets/images/visual_narrative.jpg" 
                 alt="Eruwa History" 
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -42,10 +43,12 @@ export default function History() {
               </p>
             </div>
 
-            <button className="bg-[#2B59C3] hover:bg-[#1e4499] text-white px-8 py-4 rounded-full font-bold transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-blue-500/30 hover:-translate-y-1 group">
-              Explore Full Timeline 
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
+            <Link href="/eruwa-at-a-glance/history" className="inline-block">
+              <button className="bg-[#2B59C3] hover:bg-[#1e4499] text-white px-8 py-4 rounded-full font-bold transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-blue-500/30 hover:-translate-y-1 group">
+                Explore Full Timeline 
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </Link>
           </div>
         </div>
       </div>

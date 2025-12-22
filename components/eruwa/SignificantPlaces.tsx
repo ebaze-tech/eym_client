@@ -6,7 +6,7 @@ const places = [
   {
     title: "Eleruwa Palace",
     description: "The seat of traditional power and heritage, housing centuries of royal history and cultural artifacts.",
-    image: "/assets/images/atAGlance.png"
+    image: "/assets/images/Eleruwa_Palace.jpeg"
   },
   {
     title: "Town Hall",
@@ -17,6 +17,26 @@ const places = [
     title: "Community Centre",
     description: "The hub of youth activities, development programs, and social engagement for the future generation.",
     image: "/assets/images/atAGlance.png"
+  },
+  {
+    title: "Ibarapa East LG Secretariat",
+    description: "The administrative headquarters facilitating local governance and community development initiatives.",
+    image: "/assets/images/Secretariat.jpeg"
+  },
+  {
+    title: "Adeseun Ogundoyin Polytechnic",
+    description: "A premier institution of higher learning fostering academic excellence and technological advancement.",
+    image: "/assets/images/Adeseun_Ogundoyin_Polytechnic.jpeg"
+  },
+  {
+    title: "Eleruwa Stadium",
+    description: "The center for sports and recreational activities, nurturing local talent and hosting major events.",
+    image: "/assets/images/Eleruwa_Stadium.jpeg"
+  },
+  {
+    title: "Eruwa New Motor Park",
+    description: "A key transportation hub connecting Eruwa to neighboring towns and cities, driving commerce and mobility.",
+    image: "/assets/images/Eruwa New-Motor Park.jpeg"
   }
 ];
 

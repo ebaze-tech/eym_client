@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
 export default function EruwaIntro() {
@@ -12,7 +13,7 @@ export default function EruwaIntro() {
             <div className="absolute -top-4 -left-4 w-24 h-24 bg-blue-100 rounded-tl-3xl -z-10" />
             <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-blue-50 rounded-br-3xl -z-10" />
             <Image 
-              src="/assets/images/atAGlance.png" 
+              src="/assets/images/roundabout.jpg" 
               alt="Eruwa Entrance" 
               fill
               className="object-cover rounded-2xl shadow-2xl"
@@ -43,10 +44,13 @@ export default function EruwaIntro() {
             </div>
 
             <div className="mt-10">
-              <button className="bg-[#0e4b68] text-white px-8 py-4 rounded-full font-bold hover:bg-[#0a3850] transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1">
+              <Link 
+                href="/eruwa-at-a-glance/history"
+                className="bg-[#0e4b68] text-white px-8 py-4 rounded-full font-bold hover:bg-[#0a3850] transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 w-fit"
+              >
                 Read All
                 <ArrowRight className="w-5 h-5" />
-              </button>
+              </Link>
             </div>
           </div>
         </div>

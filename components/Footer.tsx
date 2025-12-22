@@ -148,6 +148,22 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  href="/heritage"
+                  className="hover:text-white hover:translate-x-1 inline-block transition-all duration-300"
+                >
+                  Heritage
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/gallery"
+                  className="hover:text-white hover:translate-x-1 inline-block transition-all duration-300"
+                >
+                  Gallery
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/programs"
                   className="hover:text-white hover:translate-x-1 inline-block transition-all duration-300"
                 >

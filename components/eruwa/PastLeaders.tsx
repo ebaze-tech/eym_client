@@ -2,7 +2,7 @@ import React from 'react';
 import { Crown } from 'lucide-react';
 
 const leaders = [
-  "OBASEEKU (ODO BABA EWU)",
+  "OBASEEKU (ODODO BABA EWU)",
   "OLARIBIKUSI I",
   "Olasubu-Akangbe Osin",
   "GBAJUMOLA I-AFASAN",
@@ -14,17 +14,17 @@ const leaders = [
   "AJAO OTI",
   "BAMBEKE ALABI AGAN",
   "FASINA AKINDELE",
-  "ADEGBOYE 1947-1959",
+  "ADEGBOYE 1947 - 1959",
   "SOLOMON OLANREWAJU OLARIBIKUSI II",
   "BOLANLE OLANIYAN GBAJUMOLA II",
-  "SAMUEL ADEBAYO ADEGBOLA- AKINDELE I (JULY 16, 1998-2019)"
+  "SAMUEL ADEBAYO ADEGBOLA- AKINDELE I (JULY 16, 1998 - TILL DATE)"
 ];
 
 export default function PastLeaders() {
   return (
     <section className="py-24 bg-[#0e4b68] text-white relative overflow-hidden">
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_2px_2px,white_1px,transparent_0)] bg-[length:40px_40px]"></div>
+      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_2px_2px,white_1px,transparent_0)] bg-size-[40px_40px]"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">

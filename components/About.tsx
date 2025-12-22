@@ -14,16 +14,12 @@ export default function About() {
               <div className="absolute -inset-4 bg-blue-100 rounded-2xl transform rotate-2 group-hover:rotate-1 transition-transform duration-300" />
               <div className="relative aspect-3/4 rounded-xl overflow-hidden shadow-2xl">
                  <Image 
-                  src="/assets/images/tochukwu.png" 
+                  src="/assets/images/Home_illust1.png" 
                   alt="Tochukwu Ogunaka" 
                   fill
                   className="object-cover transform group-hover:scale-105 transition-transform duration-700"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
-                <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6 text-white">
-                  <h4 className="font-bold text-xl">Tochukwu Ogunaka</h4>
-                  <p className="text-sm text-gray-300 font-medium uppercase tracking-wider">Communications Associate</p>
-                </div>
               </div>
             </div>
           </div>

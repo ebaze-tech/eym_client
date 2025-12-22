@@ -1,31 +1,32 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Calendar, ArrowRight } from 'lucide-react';
+import { newsData } from '@/lib/newsData';
 
 export default function LatestNews() {
-  const news = [
-    {
-      title: "EYM Beautifies Eruwa Roundabout",
-      date: "Dec 12, 2024",
-      category: "Projects",
-      description: "Two weeks ago, our major garages received a refreshing new look, bringing a warm transformation to the heart of our town. This initiative is part of our broader beautification project.",
-      image: "/assets/images/roundabout.jpg"
-    },
-    {
-      title: "Annual General Meeting 2025",
-      date: "Dec 23, 2024",
-      category: "Events",
-      description: "EYM Annual General Meeting 2025 arrives with inspiring activities for everyone. The event opens on Tuesday 23 December with a Tourism tour and culminates in a grand celebration.",
-      image: "/assets/images/general_meeting.jpg"
-    },
-    {
-      title: "Community Development Report",
-      date: "Nov 30, 2024",
-      category: "Governance",
-      description: "In a remarkable display of selfless service and unity, New Eruwa Youth Forum took it upon themselves to contribute collectively to the renovation of the town hall.",
-      image: "/assets/images/cdr.jpg"
-    }
-  ];
+  const [activeCategory, setActiveCategory] = useState("All Posts");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  const categories = ["All Posts", "Events", "Projects", "Governance", "Announcements"];
+
+  const filteredNews = activeCategory === "All Posts" 
+    ? newsData 
+    : newsData.filter(item => item.category === activeCategory);
+
+  const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
+  const currentNews = filteredNews.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handleCategoryChange = (cat: string) => {
+    setActiveCategory(cat);
+    setCurrentPage(1);
+  };
 
   return (
     <section className="py-24 bg-white">
@@ -38,11 +39,26 @@ export default function LatestNews() {
             </h2>
           </div>
           
-          {/* Filter Buttons (Optional - can be added later) */}
+          {/* Filter Buttons */}
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat, index) => (
+              <button 
+                key={index}
+                onClick={() => handleCategoryChange(cat)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  activeCategory === cat 
+                    ? 'bg-[#2B59C3] text-white shadow-md' 
+                    : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {news.map((item, index) => (
+          {currentNews.map((item, index) => (
             <div key={index} className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group h-full">
               <div className="h-64 bg-gray-200 relative overflow-hidden">
                 <Image
@@ -72,10 +88,10 @@ export default function LatestNews() {
                 </p>
                 
                 <div className="mt-auto">
-                  <button className="text-[#2B59C3] font-bold text-sm flex items-center gap-2 group/btn hover:gap-3 transition-all">
+                  <Link href={`/news/${item.slug}`} className="text-[#2B59C3] font-bold text-sm flex items-center gap-2 group/btn hover:gap-3 transition-all">
                     Read Full Story 
                     <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -83,29 +99,42 @@ export default function LatestNews() {
         </div>
 
         {/* Pagination Controls */}
-        <div className="flex justify-center items-center gap-6">
-          <button 
-            type="button"
-            aria-label="Previous page"
-            className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-[#2B59C3] hover:text-white hover:border-[#2B59C3] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          
-          <div className="flex gap-3">
-            <button aria-label="Page 1" className="w-3 h-3 rounded-full bg-[#2B59C3] transition-all duration-300 scale-125"></button>
-            <button aria-label="Page 2" className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400 transition-all duration-300"></button>
-            <button aria-label="Page 3" className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400 transition-all duration-300"></button>
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-6">
+            <button 
+              type="button"
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              aria-label="Previous page"
+              className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-[#2B59C3] hover:text-white hover:border-[#2B59C3] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            
+            <div className="flex gap-3">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button 
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  aria-label={`Page ${page}`} 
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    currentPage === page ? 'bg-[#2B59C3] scale-125' : 'bg-gray-300 hover:bg-gray-400'
+                  }`}
+                />
+              ))}
+            </div>
+            
+            <button 
+              type="button"
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              aria-label="Next page"
+              className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-[#2B59C3] hover:text-white hover:border-[#2B59C3] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
-          
-          <button 
-            type="button"
-            aria-label="Next page"
-            className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-[#2B59C3] hover:text-white hover:border-[#2B59C3] transition-all duration-300"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
+        )}
       </div>
     </section>
   );

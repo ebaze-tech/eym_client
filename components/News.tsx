@@ -1,33 +1,18 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Calendar, ArrowRight } from 'lucide-react';
+import { newsData } from '@/lib/newsData';
 
 export default function News() {
+  const [activeCategory, setActiveCategory] = useState("All Posts");
   const categories = ["All Posts", "Events", "Projects", "Governance", "Announcements"];
   
-  const news = [
-    {
-      title: "EYM Beautifies Eruwa Roundabout",
-      date: "Dec 12, 2024",
-      category: "Projects",
-      description: "Two weeks ago, our major garages received a refreshing new look, bringing a warm transformation to the heart of our town...",
-      image: "/assets/images/roundabout.jpg"
-    },
-    {
-      title: "Annual General Meeting 2025",
-      date: "Dec 23, 2024",
-      category: "Events",
-      description: "EYM Annual General Meeting 2025 arrives with inspiring activities for everyone. The event opens on Tuesday 23 December with a Tourism...",
-      image: "/assets/images/general_meeting.jpg"
-    },
-    {
-      title: "Community Development Report",
-      date: "Nov 30, 2024",
-      category: "Governance",
-      description: "In a remarkable display of selfless service and unity, New Eruwa Youth Forum took it upon themselves to contribute collectively to the...",
-      image: "/assets/images/cdr.jpg"
-    }
-  ];
+  const filteredNews = activeCategory === "All Posts" 
+    ? newsData 
+    : newsData.filter(item => item.category === activeCategory);
 
   return (
     <section className="py-24 bg-gray-50">
@@ -42,8 +27,9 @@ export default function News() {
             {categories.map((cat, index) => (
               <button 
                 key={index}
+                onClick={() => setActiveCategory(cat)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                  index === 0 
+                  activeCategory === cat 
                     ? 'bg-[#2B59C3] text-white shadow-md' 
                     : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
                 }`}
@@ -55,7 +41,7 @@ export default function News() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {news.map((item, index) => (
+          {filteredNews.map((item, index) => (
             <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full">
               <div className="h-56 overflow-hidden relative">
                 <Image 
@@ -83,13 +69,22 @@ export default function News() {
                   {item.description}
                 </p>
                 
-                <button className="text-[#2B59C3] font-bold text-sm flex items-center gap-2 group/btn mt-auto">
+                <Link href={`/news/${item.slug}`} className="text-[#2B59C3] font-bold text-sm flex items-center gap-2 group/btn mt-auto">
                   Read Full Story 
                   <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                </button>
+                </Link>
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-12 text-center">
+          <Link 
+            href="/news" 
+            className="inline-flex items-center gap-2 bg-[#2B59C3] text-white px-8 py-3 rounded-full font-bold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+          >
+            See All News <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </div>
     </section>

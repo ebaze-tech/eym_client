@@ -21,7 +21,7 @@ export default function Hero() {
       <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center items-start text-white">
         <div className="animate-fade-in-up">
           <span className="inline-block py-1 px-3 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-sm font-semibold tracking-wider mb-6 backdrop-blur-sm">
-            Since 1981
+            Since 1961
           </span>
           <h1 className="text-5xl md:text-7xl font-bold mb-6 max-w-4xl leading-tight tracking-tight">
             Planting Seeds <br />
