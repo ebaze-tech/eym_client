@@ -18,7 +18,7 @@ export const newsData = [
     id: 2,
     slug: "annual-general-meeting-2025",
     title: "Annual General Meeting 2025",
-    date: "Dec 23, 2024",
+    date: "Dec 26, 2025",
     category: "Events",
     description: "EYM Annual General Meeting 2025 arrives with inspiring activities for everyone. The event opens on Tuesday 23 December with a Tourism...",
     content: `
