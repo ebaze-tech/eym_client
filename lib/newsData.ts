@@ -26,7 +26,7 @@ export const newsData = [
       <p>The AGM is a time for us to reflect on our achievements over the past year, discuss challenges, and plan for the future. It is also an opportunity to elect new leaders who will steer the affairs of the movement for the next tenure.</p>
       <p>We invite all youths of Eruwa, both at home and in the diaspora, to join us for this momentous occasion. Let us come together to build the Eruwa of our dreams.</p>
     `,
-    image: "/assets/images/general_meeting.jpg",
+    image: "/assets/images/eym_meeting4.jpeg",
     author: "EYM Secretariat"
   },
   {
