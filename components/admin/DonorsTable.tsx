@@ -18,7 +18,7 @@ const donorsFetcher = (url: string) =>
   fetcher(url).then((data) => (data as { data: Donor[] }).data || []);
 
 export default function DonorsTable() {
-  const { data, error, isLoading } = useSWR("/all-donors", donorsFetcher);
+  const { data, error, isLoading } = useSWR<Donor[]>("/all-donors", donorsFetcher);
   const donors: Donor[] = data || [];
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDonor, setSelectedDonor] = useState<Donor | null>(null);
