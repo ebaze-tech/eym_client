@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { Calendar, MapPin, Clock, ArrowRight } from 'lucide-react';
+import { MapPin, Clock, ArrowRight } from 'lucide-react';
 
 export default function UpcomingEvents() {
   const events = [

@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { heritageData } from '@/lib/heritageData';
-import { MapPin, Clock, ArrowRight, X } from 'lucide-react';
+import { MapPin, ArrowRight } from 'lucide-react';
 
 export default function HeritageGrid() {
   return (

@@ -35,7 +35,7 @@ export default function EntrepreneurshipHero() {
             ENTREPRENEURSHIP PROGRAM
           </h1>
           <p className="text-base md:text-lg leading-relaxed font-light text-blue-50">
-            Our Economic Empowerment Program provides skills, resources, and opportunities to help Eruwa's residents build sustainable businesses, gain financial independence, and contribute to a thriving local economy—rooted in community, driven by innovation.
+            Our Economic Empowerment Program provides skills, resources, and opportunities to help Eruwa&apos;s residents build sustainable businesses, gain financial independence, and contribute to a thriving local economy—rooted in community, driven by innovation.
           </p>
         </div>
       </div>

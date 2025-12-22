@@ -39,7 +39,7 @@ export default function EntrepreneurshipContent() {
           
           <ol className="list-decimal pl-6 space-y-4 text-gray-600 text-lg">
             <li>
-              <span className="font-bold text-gray-900">Community-Led Action:</span> Just as our ancestors built their homes on the hills of Ilewu, Adoko, and Okele, today's initiatives are driven by local voices and hands. From youth forums to elder councils, development springs from collective decision-making.
+              <span className="font-bold text-gray-900">Community-Led Action:</span> Just as our ancestors built their homes on the hills of Ilewu, Adoko, and Okele, today&apos;s initiatives are driven by local voices and hands. From youth forums to elder councils, development springs from collective decision-making.
             </li>
             <li>
               <span className="font-bold text-gray-900">Sustainable Progress:</span> We build not just for today, but for generations to come. Each project—whether infrastructure, education, healthcare, or economic empowerment—is designed with longevity in mind, ensuring that progress endures.
@@ -58,7 +58,7 @@ export default function EntrepreneurshipContent() {
           </p>
 
           <p className="text-gray-600 leading-relaxed mb-6 text-lg">
-            Together, we honor the legacy of Olaribikusi's crown, the wisdom of our past rulers, and the enduring spirit of a people determined to thrive. Let us continue to build an Eruwa where history is preserved, communities are empowered, and development is shared by all.
+            Together, we honor the legacy of Olaribikusi&apos;s crown, the wisdom of our past rulers, and the enduring spirit of a people determined to thrive. Let us continue to build an Eruwa where history is preserved, communities are empowered, and development is shared by all.
           </p>
 
           <p className="text-gray-600 leading-relaxed mb-6 text-lg font-bold">

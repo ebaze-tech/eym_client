@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import { Lock, User, ArrowRight, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
+import API from "@/api_handler/api";
+import { AxiosError } from "axios";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -28,19 +28,12 @@ export default function LoginForm() {
     setError("");
 
     try {
-      const response = await fetch(`${NEXT_PUBLIC_API_URL}/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
+      const response = await API.post("/login", formData);
+      const data = response.data;
 
       if (data.success) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("admin", JSON.stringify(data.admin));
+        sessionStorage.setItem("token", data.token);
+        sessionStorage.setItem("admin", JSON.stringify(data.admin));
         router.push("/admin/dashboard");
       } else {
         setError(
@@ -48,7 +41,11 @@ export default function LoginForm() {
         );
       }
     } catch (err) {
-      setError("An error occurred. Please try again later.");
+      const error = err as AxiosError<{ message: string }>;
+      setError(
+        error.response?.data?.message ||
+          "An error occurred. Please try again later."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -117,32 +114,6 @@ export default function LoginForm() {
                 />
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               </div>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-[#2B59C3] focus:ring-[#2B59C3] border-gray-300 rounded"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <a
-                href="#"
-                className="font-medium text-[#2B59C3] hover:text-[#1a45a3]"
-              >
-                Forgot password?
-              </a>
             </div>
           </div>
 

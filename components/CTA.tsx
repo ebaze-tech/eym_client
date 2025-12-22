@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Shield, Users, Heart, ArrowRight, Handshake, Coins } from 'lucide-react';
+import { Shield, Users, ArrowRight, Handshake, Coins } from 'lucide-react';
 
 export default function CTA() {
   const cards = [

@@ -13,7 +13,6 @@ import {
   Newspaper,
   Heart,
   ChevronDown,
-  Camera,
 } from "lucide-react";
 
 export default function Navbar() {

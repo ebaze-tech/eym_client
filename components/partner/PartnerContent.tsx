@@ -12,8 +12,6 @@ import {
 } from "lucide-react";
 import API from "@/api_handler/api";
 
-const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
-
 interface PartnershipPayload {
   organizationName: string;
   contactPerson: string;
@@ -60,7 +58,7 @@ export default function PartnerContent() {
         message: formData.message,
       };
 
-      await API.post(`${NEXT_PUBLIC_API_URL}/partnership`, payload);
+      await API.post("/partnership", payload);
 
       setStatus("success");
       setFormData({
@@ -72,22 +70,9 @@ export default function PartnerContent() {
         message: "",
       });
     } catch (error) {
-      console.error("Donation form submission failed:", error);
+      console.error("Partnership form submission failed:", error);
       setStatus("error");
     }
-    // Simulate API call
-    //   setTimeout(() => {
-    //     setStatus('success');
-    //     setMessage('Thank you for your interest in partnering with us! We will be in touch shortly.');
-    //     setFormData({
-    //       organizationName: '',
-    //       contactPerson: '',
-    //       email: '',
-    //       phoneNumber: '',
-    //       partnershipType: '',
-    //       message: ''
-    //     });
-    //   }, 1500);
   };
 
   if (status === "success") {

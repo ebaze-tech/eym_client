@@ -1,22 +1,20 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
-  MoreVertical,
   Edit,
   Trash2,
   Eye,
-  CheckCircle,
   XCircle,
   Search,
-  Filter,
   Download,
 } from "lucide-react";
 import useSWR from "swr";
 import MemberDetailModal from "./MemberDetailModal";
 import EditMemberModal from "./EditMemberModal";
+import API from "@/api_handler/api";
+import { fetcher } from "@/lib/fetcher";
 
-const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
-interface Member {
+export interface Member {
   id: string | number;
   fullName: string;
   gender: string;
@@ -55,42 +53,35 @@ interface ApiUser {
   createdAt: string;
 }
 
-const fetcher = (url: string) =>
-  fetch(url)
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error("Failed to fetch members");
-      }
-      return res.json();
-    })
-    .then((data) => {
-      const users = data.data || [];
+const membersFetcher = (url: string) =>
+  fetcher(url).then((data) => {
+    const users = data.data || [];
 
-      return users.map((user: ApiUser) => ({
-        id: user._id,
-        fullName: user.fullName,
-        gender: user.gender,
-        dateOfBirth: user.dateOfBirth,
-        religion: user.religion,
-        phoneNumber: user.phoneNumber,
-        residentialAddress: user.residentialAddress,
-        town: user.town,
-        city: user.city,
-        country: user.country,
-        compound: user.compound,
-        quarter: user.quarter,
-        occupation: user.occupation,
-        status:
-          user.status === "approved"
-            ? "Active"
-            : user.status === "rejected"
-            ? "Rejected"
-            : user.status,
-        joinedDate: user.createdAt
-          ? user.createdAt.split("T")[0]
-          : new Date().toISOString().split("T")[0],
-      }));
-    });
+    return users.map((user: ApiUser) => ({
+      id: user._id,
+      fullName: user.fullName,
+      gender: user.gender,
+      dateOfBirth: user.dateOfBirth,
+      religion: user.religion,
+      phoneNumber: user.phoneNumber,
+      residentialAddress: user.residentialAddress,
+      town: user.town,
+      city: user.city,
+      country: user.country,
+      compound: user.compound,
+      quarter: user.quarter,
+      occupation: user.occupation,
+      status:
+        user.status === "approved"
+          ? "Active"
+          : user.status === "rejected"
+          ? "Rejected"
+          : user.status,
+      joinedDate: user.createdAt
+        ? user.createdAt.split("T")[0]
+        : new Date().toISOString().split("T")[0],
+    }));
+  });
 
 export default function MembersTable({
   statusFilter,
@@ -98,8 +89,8 @@ export default function MembersTable({
   statusFilter?: string;
 }) {
   const { data, error, isLoading, mutate } = useSWR(
-    `${NEXT_PUBLIC_API_URL}/all-registrations`,
-    fetcher
+    "/all-registrations",
+    membersFetcher
   );
   const members: Member[] = data || [];
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
@@ -137,19 +128,7 @@ export default function MembersTable({
     }
 
     try {
-      const res = await fetch(
-        `${NEXT_PUBLIC_API_URL}/delete-registration/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || "Failed to delete member");
-      }
-
+      await API.delete(`/delete-registration/${id}`);
       mutate();
     } catch (error) {
       console.error(error);
@@ -158,24 +137,19 @@ export default function MembersTable({
   };
 
   const handleSave = async (updatedMember: Member) => {
-    const isNew = typeof updatedMember.id === "number";
+    const isNew = typeof updatedMember.id === "number"; // Assuming new members have number IDs or null, but logic here seems to rely on type. 
+    // Actually, if we are creating, we probably don't have an ID yet or it's a placeholder.
+    // The original code checked `typeof updatedMember.id === "number"`. 
+    // Let's assume if it's a new member creation, we use POST.
 
     if (isNew) {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/member-registration`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(updatedMember),
-          }
-        );
-        const data = await res.json();
-        if (data.success) {
+        const res = await API.post("/member-registration", updatedMember);
+        if (res.data.success) {
           mutate(); // Refresh data
           setIsEditOpen(false);
         } else {
-          alert(data.message || "Failed to create member");
+          alert(res.data.message || "Failed to create member");
         }
       } catch (e) {
         console.error(e);
@@ -207,18 +181,7 @@ export default function MembersTable({
       return;
 
     try {
-      const res = await fetch(
-        `${NEXT_PUBLIC_API_URL}/membership-application/${id}/reject`,
-        {
-          method: "POST", // or PUT depending on your backend
-        }
-      );
-
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || "Failed to reject member");
-      }
+      await API.post(`/membership-application/${id}/reject`);
 
       // Optimistically update the status in the table
       const newMembers = members.map((m) =>

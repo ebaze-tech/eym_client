@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Copy,
   CheckCircle,
@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import API from "@/api_handler/api";
 
-const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 interface DonationPayload {
   fullName: string;
   email: string;
@@ -73,18 +72,16 @@ export default function DonateContent() {
     e.preventDefault();
     setStatus("loading");
 
-    // Simulate API call
-
     try {
       const payload: DonationPayload = {
         fullName: formData.fullName,
         email: formData.email,
-        amount: formData.amount,
+        amount: parseAmount(formData.amount),
         reference: formData.reference,
         message: formData.message,
       };
 
-      await API.post(`${NEXT_PUBLIC_API_URL}/donation`, payload);
+      await API.post("/donation", payload);
 
       setStatus("success");
       setFormData({
@@ -98,16 +95,6 @@ export default function DonateContent() {
       console.error("Donation form submission failed:", error);
       setStatus("error");
     }
-    // setTimeout(() => {
-    //   setStatus("success");
-    //   setFormData({
-    //     fullName: "",
-    //     email: "",
-    //     amount: "",
-    //     reference: "",
-    //     message: "",
-    //   });
-    // }, 1500);
   };
 
   if (status === "success") {

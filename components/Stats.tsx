@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, Banknote, Shield, Star, Users, Briefcase } from 'lucide-react';
+import { Clock, Star, Users, Briefcase } from 'lucide-react';
 
 export default function Stats() {
   const stats = [

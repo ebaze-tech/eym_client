@@ -13,7 +13,7 @@ export default function EducationContent() {
             Introduction:
           </h3>
           <p className="text-gray-600 leading-relaxed mb-6 text-lg">
-            The future of Eruwa rests in the hands of its youth. Inspired by the courageous legacy of young Olaribikusi, who carried a crown and founded a dynasty, today's young people are called to build, innovate, and lead. Our Youth Development Program provides the platform, training, and opportunities for Eruwa's youth to grow into capable, ethical, and engaged citizens—ready to honor the past while forging a new path forward.
+            The future of Eruwa rests in the hands of its youth. Inspired by the courageous legacy of young Olaribikusi, who carried a crown and founded a dynasty, today&apos;s young people are called to build, innovate, and lead. Our Youth Development Program provides the platform, training, and opportunities for Eruwa&apos;s youth to grow into capable, ethical, and engaged citizens—ready to honor the past while forging a new path forward.
           </p>
 
           <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mt-16 mb-6">

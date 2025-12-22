@@ -1,34 +1,49 @@
+"use client";
 import React from 'react';
-import { Users, UserPlus, UserCheck, TrendingUp } from 'lucide-react';
+import { Users, UserCheck, Handshake, CreditCard } from 'lucide-react';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/fetcher';
+import { Member } from './MembersTable';
 
 export default function MemberStats() {
+  const { data: membersData } = useSWR('/all-registrations', fetcher);
+  const { data: partnersData } = useSWR('/all-partners', fetcher);
+  const { data: donorsData } = useSWR('/all-donors', fetcher);
+
+  const members = membersData?.data || [];
+  const partners = partnersData?.data || [];
+  const donors = donorsData?.data || [];
+
+  const totalMembers = members.length;
+  const activeMembers = members.filter((m: Member) => m.status === 'approved' || m.status === 'Active').length;
+  
   const stats = [
     {
       title: "Total Members",
-      value: "2,543",
-      change: "+12%",
+      value: totalMembers.toLocaleString(),
+      change: "Registered",
       icon: Users,
       color: "bg-blue-500"
     },
     {
-      title: "New Requests",
-      value: "45",
-      change: "+5%",
-      icon: UserPlus,
+      title: "Active Members",
+      value: activeMembers.toLocaleString(),
+      change: "Approved",
+      icon: UserCheck,
       color: "bg-green-500"
     },
     {
-      title: "Active Members",
-      value: "2,100",
-      change: "+8%",
-      icon: UserCheck,
+      title: "Partnerships",
+      value: partners.length.toLocaleString(),
+      change: "Requests",
+      icon: Handshake,
       color: "bg-purple-500"
     },
     {
-      title: "Growth Rate",
-      value: "15%",
-      change: "+2%",
-      icon: TrendingUp,
+      title: "Donations",
+      value: donors.length.toLocaleString(),
+      change: "Records",
+      icon: CreditCard,
       color: "bg-orange-500"
     }
   ];
@@ -41,7 +56,7 @@ export default function MemberStats() {
             <div className={`${stat.color} p-3 rounded-xl text-white`}>
               <stat.icon className="w-6 h-6" />
             </div>
-            <span className="text-green-500 text-sm font-bold bg-green-50 px-2 py-1 rounded-lg">
+            <span className="text-gray-500 text-xs font-bold bg-gray-50 px-2 py-1 rounded-lg">
               {stat.change}
             </span>
           </div>

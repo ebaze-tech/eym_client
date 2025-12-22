@@ -23,7 +23,6 @@ export default function MembershipForm() {
     religion: "",
     phoneNumber: "",
     residentialAddress: "",
-    town: "",
     city: "",
     country: "",
     compound: "",
@@ -60,7 +59,6 @@ export default function MembershipForm() {
         religion: "",
         phoneNumber: "",
         residentialAddress: "",
-        town: "",
         city: "",
         country: "",
         compound: "",
@@ -279,28 +277,10 @@ export default function MembershipForm() {
 
                 <div className="space-y-2">
                   <label
-                    htmlFor="town"
-                    className="block text-sm font-bold text-gray-700 ml-1"
-                  >
-                    Town
-                  </label>
-                  <input
-                    type="text"
-                    id="town"
-                    value={formData.town}
-                    onChange={handleChange}
-                    required
-                    placeholder="e.g. Test town"
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 focus:ring-2 focus:ring-[#2B59C3] focus:border-transparent outline-none transition-all"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label
                     htmlFor="city"
                     className="block text-sm font-bold text-gray-700 ml-1"
                   >
-                    City
+                    Town/City
                   </label>
                   <input
                     type="text"
@@ -308,7 +288,7 @@ export default function MembershipForm() {
                     value={formData.city}
                     onChange={handleChange}
                     required
-                    placeholder="e.g. Test City"
+                    placeholder="e.g. Eruwa"
                     className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 focus:ring-2 focus:ring-[#2B59C3] focus:border-transparent outline-none transition-all"
                   />
                 </div>

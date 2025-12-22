@@ -1,10 +1,8 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Mail, Phone, MapPin, Send, Loader2, CheckCircle } from "lucide-react";
 import API from "@/api_handler/api";
 
-const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
-const CONTACT_URL = process.env.CONTACT_URL;
 interface ContactPayload {
   firstName: string;
   lastName: string;
@@ -40,32 +38,17 @@ export default function ContactForm() {
     e.preventDefault();
     setStatus("loading");
 
-    // Simulate API call
-    // setTimeout(() => {
-    //   setStatus("success");
-    //   setFormData({
-    //     firstName: "",
-    //     lastName: "",
-    //     email: "",
-    //     phone: "",
-    //     subject: "",
-    //     message: "",
-    //   });
-    // }, 1500);
-
     try {
-      console.log("Contact pane");
       const payload: ContactPayload = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         phone: formData.phone,
-        subject: formData.phone,
+        subject: formData.subject,
         message: formData.message,
       };
 
-      const data = await API.post(`${NEXT_PUBLIC_API_URL}/contact`, payload);
-      console.log(data.data);
+      await API.post("/contact", payload);
 
       setStatus("success");
       setFormData({
