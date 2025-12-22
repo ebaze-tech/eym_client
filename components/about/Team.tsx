@@ -3,18 +3,32 @@ import Image from "next/image";
 import { Users } from "lucide-react";
 
 export default function Team() {
-  const leaders = [
+  const king = {
+    name: "HRM Oba Samuel Adebayo",
+    title: "Eleruwa of Eruwa",
+    image: "/assets/images/oba.png",
+  };
+
+  const seniorLeaders = [
     {
-      name: "HRM Oba Samuel Adebayo",
-      title: "Eleruwa of Eruwa",
-      image: "/assets/images/oba.png",
-      large: true,
+      name: "High Chief Olatunji Samuel Oladiran",
+      title: "Odofin of Eruwa, Chairman of Eleruwa Kingmakers",
+      image: "/assets/images/Chief_Olatunji_Samuel.jpeg",
+    },
+    {
+      name: "Chief Joseph Adeola Peluola FCA, MBA",
+      title: "Jagun of Anko & Chairman, Eruwa Council of Elders",
+      image: "/assets/images/Chief_Joseph_Adeola.jpeg",
+    },
+    {
+      name: "Chief Olatunji Alao Fadairo",
+      title: "Asiwaju of Eruwa Land",
+      image: "/assets/images/Chief_Olatunji_Alao.jpeg",
     },
     {
       name: "Olorunniyi Bukunmi",
       title: "National President",
       image: "/assets/images/national_president.png",
-      large: true,
     },
   ];
 
@@ -55,6 +69,12 @@ export default function Team() {
       image:
         "/assets/images/tochukwu.png",
     },
+    {
+      name: "Olawoore Olusola Bolanle",
+      title: "Director of Social & Welfare",
+      image:
+        "/assets/images/Olawoore_Olushola_Bolanle.jpeg",
+    },
   ];
 
   return (
@@ -78,9 +98,30 @@ export default function Team() {
           </p>
         </div>
 
-        {/* Top Leaders */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20 max-w-4xl mx-auto">
-          {leaders.map((leader, index) => (
+        {/* King */}
+        <div className="flex justify-center mb-20">
+          <div className="text-center group max-w-md w-full">
+            <div className="aspect-square rounded-3xl overflow-hidden mb-6 bg-gray-100 shadow-lg relative mx-auto w-full md:w-96">
+              <Image
+                src={king.image}
+                alt={king.name}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </div>
+            <p className="text-[#2B59C3] font-bold text-sm uppercase tracking-wider mb-2">
+              {king.title}
+            </p>
+            <h3 className="text-3xl font-bold text-gray-900">
+              {king.name}
+            </h3>
+          </div>
+        </div>
+
+        {/* Senior Leaders */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+          {seniorLeaders.map((leader, index) => (
             <div key={index} className="text-center group">
               <div className="aspect-square rounded-3xl overflow-hidden mb-6 bg-gray-100 shadow-lg relative">
                 <Image
@@ -91,10 +132,10 @@ export default function Team() {
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
-              <p className="text-[#2B59C3] font-bold text-sm uppercase tracking-wider mb-2">
+              <p className="text-[#2B59C3] font-bold text-xs uppercase tracking-wider mb-2 min-h-[3rem] flex items-center justify-center">
                 {leader.title}
               </p>
-              <h3 className="text-2xl font-bold text-gray-900">
+              <h3 className="text-xl font-bold text-gray-900">
                 {leader.name}
               </h3>
             </div>

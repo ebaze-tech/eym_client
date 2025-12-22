@@ -35,7 +35,7 @@ export default function EducationHero() {
             EDUCATION PROGRAM
           </h1>
           <p className="text-base md:text-lg leading-relaxed font-light text-blue-50">
-            Our Youth Development Program shapes tomorrow's leaders today through education, skills, mentorship, and civic engagement—empowering young people to drive Eruwa's progress with confidence, creativity, and community pride.
+            Our Youth Development Program shapes tomorrow&apos;s leaders today through education, skills, mentorship, and civic engagement—empowering young people to drive Eruwa&apos;s progress with confidence, creativity, and community pride.
           </p>
         </div>
       </div>

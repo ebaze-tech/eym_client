@@ -7,7 +7,7 @@ export default function EruwaHero() {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 bg-gray-900">
         <Image 
-          src="/assets/images/atAGlance.png"
+          src="/assets/images/visual_narrative.jpg"
           alt="Eruwa Landscape" 
           fill
           className="object-cover opacity-40"

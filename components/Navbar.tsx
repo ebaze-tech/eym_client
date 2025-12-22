@@ -13,6 +13,7 @@ import {
   Newspaper,
   Heart,
   ChevronDown,
+  Camera,
 } from "lucide-react";
 
 export default function Navbar() {
@@ -30,10 +31,19 @@ export default function Navbar() {
       children: [
         { href: "/about", label: "About Us" },
         { href: "/eruwa-at-a-glance", label: "Eruwa" },
+        { href: "/heritage", label: "Heritage" },
       ],
     },
     { href: "/programs", label: "Our Programs", icon: Briefcase },
-    { href: "/news", label: "News & Events", icon: Newspaper },
+    { 
+      href: "/news", 
+      label: "News & Events", 
+      icon: Newspaper,
+      children: [
+        { href: "/news", label: "News & Events" },
+        { href: "/gallery", label: "Gallery" }
+      ]
+    },
     { href: "/get-involved", label: "Get Involved", icon: Heart },
   ];
 

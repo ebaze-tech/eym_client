@@ -1,8 +1,13 @@
 import React from 'react';
 import { LayoutGrid, ArrowUpRight, Camera } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { galleryData } from '@/lib/galleryData';
 
 export default function Gallery() {
+  // Display only the first 2 items for the homepage preview
+  const previewImages = galleryData.slice(0, 2);
+
   return (
     <section className="py-24 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -17,39 +22,27 @@ export default function Gallery() {
             </h2>
           </div>
           
-          <button className="border border-gray-300 text-gray-700 px-6 py-3 rounded-full flex items-center gap-2 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all duration-300 font-medium">
+          <Link href="/gallery" className="border border-gray-300 text-gray-700 px-6 py-3 rounded-full flex items-center gap-2 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all duration-300 font-medium">
             View All Photos <ArrowUpRight className="w-4 h-4" />
-          </button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="relative rounded-3xl overflow-hidden h-100 group shadow-lg">
-            <Image 
-              src="/assets/images/visual_narrative.jpg" 
-              alt="Gallery 1" 
-              fill
-              className="object-cover transition-transform duration-700 group-hover:scale-110"
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="absolute bottom-6 left-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-              <span className="bg-[#2B59C3] text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">Events</span>
-              <h3 className="text-white font-bold text-xl">EYM 2025</h3>
-            </div>
-          </div>
-          
-          <div className="relative rounded-3xl overflow-hidden h-100 group shadow-lg">
-            <Image 
-              src="/assets/images/visual_narrative.jpg" 
-              alt="Gallery 2" 
-              fill
-              className="object-cover transition-transform duration-700 group-hover:scale-110"
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="absolute bottom-6 left-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-              <span className="bg-[#2B59C3] text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">Events</span>
-              <h3 className="text-white font-bold text-xl">EYM 2025</h3>
-            </div>
-          </div>
+          {previewImages.map((item) => (
+            <Link href="/gallery" key={item.id} className="relative rounded-3xl overflow-hidden h-100 group shadow-lg block">
+              <Image 
+                src={item.image} 
+                alt={item.title} 
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute bottom-6 left-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                <span className="bg-[#2B59C3] text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">{item.category}</span>
+                <h3 className="text-white font-bold text-xl">{item.title}</h3>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </section>
