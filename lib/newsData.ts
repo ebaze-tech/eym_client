@@ -20,9 +20,9 @@ export const newsData = [
     title: "Annual General Meeting 2025",
     date: "Dec 26, 2025",
     category: "Events",
-    description: "EYM Annual General Meeting 2025 arrives with inspiring activities for everyone. The event opens on Tuesday 26 December with a Tourism...",
+    description: "EYM Annual General Meeting 2025 arrives with inspiring activities for everyone. The event opens on Friday 26 December with a Tourism...",
     content: `
-      <p>EYM Annual General Meeting 2025 arrives with inspiring activities for everyone. The event opens on Tuesday 26 December with a Tourism tour and culminates in a grand celebration.</p>
+      <p>EYM Annual General Meeting 2025 arrives with inspiring activities for everyone. The event opens on Friday 26 December with a Tourism tour and culminates in a grand celebration.</p>
       <p>The AGM is a time for us to reflect on our achievements over the past year, discuss challenges, and plan for the future. It is also an opportunity to elect new leaders who will steer the affairs of the movement for the next tenure.</p>
       <p>We invite all youths of Eruwa, both at home and in the diaspora, to join us for this momentous occasion. Let us come together to build the Eruwa of our dreams.</p>
     `,
