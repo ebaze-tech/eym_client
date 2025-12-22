@@ -1,35 +1,37 @@
 "use client";
-import React, { useState } from 'react';
-import { Lock, User, ArrowRight, Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import React, { useState } from "react";
+import { Lock, User, ArrowRight, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function LoginForm() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    username: '',
-    password: ''
+    username: "",
+    password: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
-    setError('');
+    setError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
-        method: 'POST',
+      const response = await fetch(`${NEXT_PUBLIC_API_URL}/login`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -37,14 +39,16 @@ export default function LoginForm() {
       const data = await response.json();
 
       if (data.success) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('admin', JSON.stringify(data.admin));
-        router.push('/admin/dashboard');
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("admin", JSON.stringify(data.admin));
+        router.push("/admin/dashboard");
       } else {
-        setError(data.message || 'Login failed. Please check your credentials.');
+        setError(
+          data.message || "Login failed. Please check your credentials."
+        );
       }
     } catch (err) {
-      setError('An error occurred. Please try again later.');
+      setError("An error occurred. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -62,7 +66,7 @@ export default function LoginForm() {
             Sign in to manage the Eruwa Youth Movement dashboard
           </p>
         </div>
-        
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
             <div className="bg-red-50 text-red-500 p-4 rounded-xl text-sm text-center font-medium">
@@ -71,7 +75,10 @@ export default function LoginForm() {
           )}
           <div className="space-y-4">
             <div>
-              <label htmlFor="username" className="block text-sm font-bold text-gray-700 ml-1 mb-1">
+              <label
+                htmlFor="username"
+                className="block text-sm font-bold text-gray-700 ml-1 mb-1"
+              >
                 Username
               </label>
               <div className="relative">
@@ -88,9 +95,12 @@ export default function LoginForm() {
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               </div>
             </div>
-            
+
             <div>
-              <label htmlFor="password" className="block text-sm font-bold text-gray-700 ml-1 mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-bold text-gray-700 ml-1 mb-1"
+              >
                 Password
               </label>
               <div className="relative">
@@ -118,13 +128,19 @@ export default function LoginForm() {
                 type="checkbox"
                 className="h-4 w-4 text-[#2B59C3] focus:ring-[#2B59C3] border-gray-300 rounded"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+              <label
+                htmlFor="remember-me"
+                className="ml-2 block text-sm text-gray-900"
+              >
                 Remember me
               </label>
             </div>
 
             <div className="text-sm">
-              <a href="#" className="font-medium text-[#2B59C3] hover:text-[#1a45a3]">
+              <a
+                href="#"
+                className="font-medium text-[#2B59C3] hover:text-[#1a45a3]"
+              >
                 Forgot password?
               </a>
             </div>
@@ -140,10 +156,13 @@ export default function LoginForm() {
                 {isLoading ? (
                   <Loader2 className="h-5 w-5 text-blue-300 animate-spin" />
                 ) : (
-                  <ArrowRight className="h-5 w-5 text-blue-300 group-hover:text-blue-200 transition-colors" aria-hidden="true" />
+                  <ArrowRight
+                    className="h-5 w-5 text-blue-300 group-hover:text-blue-200 transition-colors"
+                    aria-hidden="true"
+                  />
                 )}
               </span>
-              {isLoading ? 'Signing in...' : 'Sign in to Dashboard'}
+              {isLoading ? "Signing in..." : "Sign in to Dashboard"}
             </button>
           </div>
         </form>

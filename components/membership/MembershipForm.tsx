@@ -11,6 +11,9 @@ import {
   Loader2,
   CheckCircle,
 } from "lucide-react";
+import API from "@/api_handler/api";
+
+const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function MembershipForm() {
   const [formData, setFormData] = useState({
@@ -46,41 +49,26 @@ export default function MembershipForm() {
     setMessage("");
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/member-registration`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      await API.post(`${NEXT_PUBLIC_API_URL}/member-registration`, formData);
 
-      const data = await response.json();
-
-      if (data.success) {
-        setStatus("success");
-        setMessage("Registration successful! We will review your application.");
-        setFormData({
-          fullName: "",
-          gender: "",
-          dateOfBirth: "",
-          religion: "",
-          phoneNumber: "",
-          residentialAddress: "",
-          town: "",
-          city: "",
-          country: "",
-          compound: "",
-          quarter: "",
-          occupation: "",
-        });
-      } else {
-        setStatus("error");
-        setMessage(data.message || "Registration failed. Please try again.");
-      }
+      setStatus("success");
+      setMessage("Registration successful! We will review your application.");
+      setFormData({
+        fullName: "",
+        gender: "",
+        dateOfBirth: "",
+        religion: "",
+        phoneNumber: "",
+        residentialAddress: "",
+        town: "",
+        city: "",
+        country: "",
+        compound: "",
+        quarter: "",
+        occupation: "",
+      });
     } catch (error) {
+      console.log("Membership registration error", error);
       setStatus("error");
       setMessage(
         "An error occurred. Please check your connection and try again."

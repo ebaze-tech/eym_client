@@ -1,6 +1,18 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Mail, Phone, MapPin, Send, Loader2, CheckCircle } from "lucide-react";
+import API from "@/api_handler/api";
+
+const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
+const CONTACT_URL = process.env.CONTACT_URL;
+interface ContactPayload {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+}
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -29,7 +41,32 @@ export default function ContactForm() {
     setStatus("loading");
 
     // Simulate API call
-    setTimeout(() => {
+    // setTimeout(() => {
+    //   setStatus("success");
+    //   setFormData({
+    //     firstName: "",
+    //     lastName: "",
+    //     email: "",
+    //     phone: "",
+    //     subject: "",
+    //     message: "",
+    //   });
+    // }, 1500);
+
+    try {
+      console.log("Contact pane");
+      const payload: ContactPayload = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        subject: formData.phone,
+        message: formData.message,
+      };
+
+      const data = await API.post(`${NEXT_PUBLIC_API_URL}/contact`, payload);
+      console.log(data.data);
+
       setStatus("success");
       setFormData({
         firstName: "",
@@ -39,7 +76,10 @@ export default function ContactForm() {
         subject: "",
         message: "",
       });
-    }, 1500);
+    } catch (error) {
+      console.error("Contact form submission failed:", error);
+      setStatus("error");
+    }
   };
 
   if (status === "success") {
@@ -94,8 +134,8 @@ export default function ContactForm() {
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 mb-1">Email Us</h3>
-                <p className="text-gray-600 text-sm">info@eruwayouth.org</p>
-                <p className="text-gray-600 text-sm">support@eruwayouth.org</p>
+                <p className="text-gray-600 text-sm">info@eym.org.ng</p>
+                <p className="text-gray-600 text-sm">eymsince1961@gmail.com</p>
               </div>
             </div>
 
@@ -266,6 +306,12 @@ export default function ContactForm() {
                   Send Message
                   <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </>
+              )}
+
+              {status === "error" && (
+                <p className="text-red-600 text-sm font-medium">
+                  Something went wrong. Please try again.
+                </p>
               )}
             </button>
           </form>
