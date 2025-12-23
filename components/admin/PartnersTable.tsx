@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Search, Eye, Download } from "lucide-react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export interface Partner {
   _id: string;
@@ -20,7 +21,7 @@ const partnersFetcher = (url: string) =>
 
 export default function PartnersTable() {
   const { data, error, isLoading } = useSWR("/all-partners", partnersFetcher);
-  const partners: Partner[] = data || [];
+  const partners: Partner[] = Array.isArray(data) ? data : [];
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
 
@@ -52,7 +53,7 @@ export default function PartnersTable() {
     document.body.removeChild(link);
   };
 
-  if (isLoading) return <div className="p-6 text-center">Loading partners...</div>;
+  if (isLoading) return <LoadingSpinner />;
   if (error) return <div className="p-6 text-center text-red-500">Failed to load partners.</div>;
 
   return (

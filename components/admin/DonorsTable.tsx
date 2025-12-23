@@ -3,22 +3,30 @@ import React, { useState } from "react";
 import { Search, Eye, Download } from "lucide-react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export interface Donor {
   _id: string;
   fullName: string;
   email: string;
-  amount: string;
+  amount: string | number;
   reference: string;
   message: string;
   createdAt: string;
 }
+
+const formatAmount = (amount: string | number) => {
+  const num = Number(amount);
+  return isNaN(num) ? String(amount) : num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+};
 
 const donorsFetcher = (url: string) =>
   fetcher(url).then((data) => (data as { data: Donor[] }).data || []);
 
 export default function DonorsTable() {
   const { data, error, isLoading } = useSWR<Donor[]>("/all-donors", donorsFetcher);
+  console.log(data);
+  
   const donors: Donor[] = data || [];
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDonor, setSelectedDonor] = useState<Donor | null>(null);
@@ -51,7 +59,7 @@ export default function DonorsTable() {
     document.body.removeChild(link);
   };
 
-  if (isLoading) return <div className="p-6 text-center">Loading donors...</div>;
+  if (isLoading) return <LoadingSpinner />;
   if (error) return <div className="p-6 text-center text-red-500">Failed to load donors.</div>;
 
   return (
@@ -96,11 +104,16 @@ export default function DonorsTable() {
                     {donor.fullName}
                     <p className="text-xs text-gray-500 font-normal">{donor.email}</p>
                   </td>
-                  <td className="px-6 py-4 font-bold text-green-600">₦{Number(donor.amount).toLocaleString()}</td>
+                  <td className="px-6 py-4 font-bold text-green-600">₦{formatAmount(donor.amount)}</td>
                   <td className="px-6 py-4 font-mono text-xs">{donor.reference}</td>
                   <td className="px-6 py-4">{new Date(donor.createdAt).toLocaleDateString()}</td>
                   <td className="px-6 py-4 text-right">
-                    <button onClick={() => setSelectedDonor(donor)} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                    <button
+                      onClick={() => setSelectedDonor(donor)}
+                      className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      title="View details"
+                      aria-label="View details"
+                    >
                       <Eye className="w-4 h-4" />
                     </button>
                   </td>
@@ -122,7 +135,7 @@ export default function DonorsTable() {
             <div className="space-y-2">
               <p><strong>Name:</strong> {selectedDonor.fullName}</p>
               <p><strong>Email:</strong> {selectedDonor.email}</p>
-              <p><strong>Amount:</strong> ₦{Number(selectedDonor.amount).toLocaleString()}</p>
+              <p><strong>Amount:</strong> ₦{formatAmount(selectedDonor.amount)}</p>
               <p><strong>Reference:</strong> {selectedDonor.reference}</p>
               <p><strong>Date:</strong> {new Date(selectedDonor.createdAt).toLocaleString()}</p>
               <div className="mt-4 p-4 bg-gray-50 rounded-lg">

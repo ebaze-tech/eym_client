@@ -17,7 +17,7 @@ export default function DashboardPage() {
       </div>
       
       <MemberStats />
-      <MembersTable />
+      <MembersTable limit={5} />
     </div>
   );
 }

@@ -58,12 +58,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       exact: false,
     },
     {
-      name: "Requests",
-      href: "/admin/dashboard/requests",
-      icon: FileText,
-      exact: false,
-    },
-    {
       name: "Mails",
       href: "/admin/dashboard/mails",
       icon: Mail,

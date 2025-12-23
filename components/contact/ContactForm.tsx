@@ -128,8 +128,7 @@ export default function ContactForm() {
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 mb-1">Call Us</h3>
-                <p className="text-gray-600 text-sm">+234 800 123 4567</p>
-                <p className="text-gray-600 text-sm">+234 800 987 6543</p>
+                <p className="text-gray-600 text-sm">+234 703 268 8666</p>
               </div>
             </div>
 

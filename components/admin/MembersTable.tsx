@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 import {
   Edit,
   Trash2,
@@ -7,12 +8,16 @@ import {
   XCircle,
   Search,
   Download,
+  CheckCircle,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import useSWR from "swr";
 import MemberDetailModal from "./MemberDetailModal";
 import EditMemberModal from "./EditMemberModal";
 import API from "@/api_handler/api";
 import { fetcher } from "@/lib/fetcher";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export interface Member {
   id: string | number;
@@ -51,11 +56,12 @@ interface ApiUser {
   quarter: string;
   occupation: string;
   createdAt: string;
+  updatedAt?: string;
 }
 
-const membersFetcher = (url: string) =>
-  fetcher(url).then((data) => {
-    const users = data.data || [];
+const membersFetcher = () =>
+  fetcher("/all-registrations").then((data) => {
+    const users = Array.isArray(data) ? data : (data.data || []);
 
     return users.map((user: ApiUser) => ({
       id: user._id,
@@ -85,18 +91,23 @@ const membersFetcher = (url: string) =>
 
 export default function MembersTable({
   statusFilter,
+  limit,
 }: {
   statusFilter?: string;
+  limit?: number;
 }) {
   const { data, error, isLoading, mutate } = useSWR(
-    "/all-registrations",
+    limit ? "/all-registrations?view=dashboard" : "/all-registrations",
     membersFetcher
   );
-  const members: Member[] = data || [];
+  const members: Member[] = Array.isArray(data) ? data : [];
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState<"Active" | "Inactive">("Active");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const handleView = (member: Member) => {
     setSelectedMember(member);
@@ -145,29 +156,40 @@ export default function MembersTable({
     if (isNew) {
       try {
         const res = await API.post("/member-registration", updatedMember);
-        if (res.data.success) {
+        if ((res.data as any).success) {
           mutate(); // Refresh data
           setIsEditOpen(false);
         } else {
-          alert(res.data.message || "Failed to create member");
+          alert((res.data as any).message || "Failed to create member");
         }
       } catch (e) {
         console.error(e);
         alert("An error occurred while creating the member");
       }
     } else {
-      // Existing logic for local update (since we don't have edit endpoint yet)
-      const exists = members.some((m) => m.id === updatedMember.id);
-      let newMembers;
-      if (exists) {
-        newMembers = members.map((m) =>
-          m.id === updatedMember.id ? updatedMember : m
-        );
-      } else {
-        newMembers = [updatedMember, ...members];
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, joinedDate, ...rest } = updatedMember;
+
+        const statusMap: Record<string, string> = {
+          Active: "approved",
+          Rejected: "rejected",
+          Pending: "pending",
+          Inactive: "inactive",
+        };
+
+        const payload = {
+          ...rest,
+          status: statusMap[updatedMember.status] || updatedMember.status.toLowerCase(),
+        };
+
+        await API.patch(`/update-registration/${updatedMember.id}`, payload);
+        mutate();
+        setIsEditOpen(false);
+      } catch (error) {
+        console.error(error);
+        alert("Failed to update member. Please try again.");
       }
-      mutate(newMembers, false);
-      setIsEditOpen(false);
     }
   };
 
@@ -191,6 +213,29 @@ export default function MembersTable({
     } catch (error) {
       console.error(error);
       alert("Failed to reject member. Please try again.");
+    }
+  };
+
+  const handleApprove = async (id: string | number) => {
+    if (
+      !window.confirm(
+        "Are you sure you want to approve this member?"
+      )
+    )
+      return;
+
+    try {
+      // Using update endpoint to set status to approved
+      await API.patch(`/update-registration/${id}`, { status: "approved" });
+
+      // Optimistically update the status in the table
+      const newMembers = members.map((m) =>
+        m.id === id ? { ...m, status: "Active" } : m
+      );
+      mutate(newMembers, false);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to approve member. Please try again.");
     }
   };
 
@@ -238,10 +283,27 @@ export default function MembersTable({
       member.phoneNumber.includes(searchTerm) ||
       member.occupation.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = statusFilter ? member.status === statusFilter : true;
+    let matchesStatus = true;
+    if (limit) {
+      // If limit is set (Dashboard view), show all or respect statusFilter if passed
+      matchesStatus = statusFilter ? member.status === statusFilter : true;
+    } else {
+      // Tab logic
+      if (activeTab === "Active") {
+        matchesStatus = member.status === "Active";
+      } else {
+        matchesStatus = member.status !== "Active";
+      }
+    }
 
     return matchesSearch && matchesStatus;
   });
+
+  // Pagination Logic
+  const totalItems = filteredMembers.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedMembers = limit ? filteredMembers.slice(0, limit) : filteredMembers.slice(startIndex, startIndex + itemsPerPage);
 
   if (error)
     return (
@@ -249,47 +311,81 @@ export default function MembersTable({
         Failed to load members.
       </div>
     );
-  if (isLoading)
-    return (
-      <div className="p-6 text-center text-gray-500">Loading members...</div>
-    );
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <>
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="p-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <h2 className="text-lg font-bold text-gray-900">
-            {statusFilter ? `${statusFilter} Members` : "All Members"}
-            <span className="ml-2 text-sm font-normal text-gray-500">
-              ({filteredMembers.length})
-            </span>
-          </h2>
+          <div className="flex flex-col gap-2">
+            <h2 className="text-lg font-bold text-gray-900">
+              {limit ? "Recent Members" : (statusFilter ? `${statusFilter} Members` : "All Members")}
+              <span className="ml-2 text-sm font-normal text-gray-500">
+                ({filteredMembers.length})
+              </span>
+            </h2>
+            {!limit && !statusFilter && (
+              <div className="flex gap-2">
+                <button
+                  onClick={() => { setActiveTab("Active"); setCurrentPage(1); }}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                    activeTab === "Active"
+                      ? "bg-blue-100 text-blue-700"
+                      : "text-gray-500 hover:bg-gray-100"
+                  }`}
+                >
+                  Active
+                </button>
+                <button
+                  onClick={() => { setActiveTab("Inactive"); setCurrentPage(1); }}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                    activeTab === "Inactive"
+                      ? "bg-blue-100 text-blue-700"
+                      : "text-gray-500 hover:bg-gray-100"
+                  }`}
+                >
+                  Inactive
+                </button>
+              </div>
+            )}
+          </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
-            <div className="relative grow sm:grow-0">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search members..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
-              />
-            </div>
-            <button
-              onClick={handleDownload}
-              className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg border border-gray-200"
-              title="Download CSV"
-            >
-              <Download className="w-4 h-4" />
-            </button>
-            {statusFilter !== "Pending" && (
-              <button
-                onClick={handleAdd}
-                className="flex items-center gap-2 bg-[#2B59C3] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#1a45a3] transition-colors shadow-lg shadow-blue-900/20 text-sm"
+            {limit ? (
+              <Link
+                href="/admin/dashboard/members"
+                className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
               >
-                + Add Member
-              </button>
+                See All
+              </Link>
+            ) : (
+              <>
+                <div className="relative grow sm:grow-0">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <input
+                    type="text"
+                    placeholder="Search members..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
+                  />
+                </div>
+                <button
+                  onClick={handleDownload}
+                  className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg border border-gray-200"
+                  title="Download CSV"
+                >
+                  <Download className="w-4 h-4" />
+                </button>
+                {activeTab === "Active" && (
+                  <button
+                    onClick={handleAdd}
+                    className="flex items-center gap-2 bg-[#2B59C3] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#1a45a3] transition-colors shadow-lg shadow-blue-900/20 text-sm"
+                  >
+                    + Add Member
+                  </button>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -307,8 +403,8 @@ export default function MembersTable({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {filteredMembers.length > 0 ? (
-                filteredMembers.map((member) => (
+              {paginatedMembers.length > 0 ? (
+                paginatedMembers.map((member) => (
                   <tr
                     key={member.id}
                     className="hover:bg-gray-50 transition-colors"
@@ -366,13 +462,23 @@ export default function MembersTable({
                         >
                           <Edit className="w-4 h-4" />
                         </button>
-                        <button
-                          onClick={() => handleReject(member.id)}
-                          className="p-2 text-gray-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors"
-                          title="Reject"
-                        >
-                          <XCircle className="w-4 h-4" />
-                        </button>
+                        {member.status !== "Active" ? (
+                          <button
+                            onClick={() => handleApprove(member.id)}
+                            className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                            title="Approve"
+                          >
+                            <CheckCircle className="w-4 h-4" />
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleReject(member.id)}
+                            className="p-2 text-gray-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors"
+                            title="Reject"
+                          >
+                            <XCircle className="w-4 h-4" />
+                          </button>
+                        )}
                         <button
                           onClick={() => handleDelete(member.id)}
                           className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -397,6 +503,30 @@ export default function MembersTable({
             </tbody>
           </table>
         </div>
+        
+        {!limit && totalPages > 1 && (
+          <div className="p-4 border-t border-gray-200 flex items-center justify-between">
+            <p className="text-sm text-gray-500">
+              Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, totalItems)} of {totalItems} members
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <MemberDetailModal

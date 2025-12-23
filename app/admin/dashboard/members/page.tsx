@@ -11,7 +11,7 @@ export default function MembersPage() {
         </div>
       </div>
       
-      <MembersTable statusFilter="Active" />
+      <MembersTable />
     </div>
   );
 }

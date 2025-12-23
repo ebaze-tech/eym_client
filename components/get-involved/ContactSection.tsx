@@ -33,7 +33,7 @@ export default function ContactSection() {
                 <div className="bg-white/10 p-3 rounded-full">
                   <Phone className="w-6 h-6" />
                 </div>
-                <span>Or call +234 800 123 4567</span>
+                <span>Or call +234 703 268 8666</span>
               </div>
             </div>
           </div>

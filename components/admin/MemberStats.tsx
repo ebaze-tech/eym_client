@@ -4,11 +4,16 @@ import { Users, UserCheck, Handshake, CreditCard } from 'lucide-react';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/fetcher';
 import { Member } from './MembersTable';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function MemberStats() {
-  const { data: membersData } = useSWR('/all-registrations', fetcher);
-  const { data: partnersData } = useSWR('/all-partners', fetcher);
-  const { data: donorsData } = useSWR('/all-donors', fetcher);
+  const { data: membersData, isLoading: membersLoading } = useSWR('/all-registrations', fetcher);
+  const { data: partnersData, isLoading: partnersLoading } = useSWR('/all-partners', fetcher);
+  const { data: donorsData, isLoading: donorsLoading } = useSWR('/all-donors', fetcher);
+
+  if (membersLoading || partnersLoading || donorsLoading) {
+    return <LoadingSpinner />;
+  }
 
   const members = membersData?.data || [];
   const partners = partnersData?.data || [];
