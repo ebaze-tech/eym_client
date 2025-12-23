@@ -17,17 +17,26 @@ export interface Donor {
 
 const formatAmount = (amount: string | number) => {
   const num = Number(amount);
-  return isNaN(num) ? String(amount) : num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return isNaN(num)
+    ? String(amount)
+    : num.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
 };
 
 const donorsFetcher = (url: string) =>
   fetcher(url).then((data) => (data as { data: Donor[] }).data || []);
 
 export default function DonorsTable() {
-  const { data, error, isLoading } = useSWR<Donor[]>("/all-donors", donorsFetcher);
+  const { data, error, isLoading } = useSWR("/all-donors", donorsFetcher);
   console.log(data);
-  
-  const donors: Donor[] = data || [];
+
+  const donors: Donor[] = Array.isArray(data)
+    ? data
+    : Array.isArray((data as unknown as { data: Donor[] })?.data)
+    ? (data as unknown as { data: Donor[] }).data
+    : [];
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDonor, setSelectedDonor] = useState<Donor | null>(null);
 
@@ -39,7 +48,14 @@ export default function DonorsTable() {
   );
 
   const handleDownload = () => {
-    const headers = ["Full Name", "Email", "Amount", "Reference", "Message", "Date"];
+    const headers = [
+      "Full Name",
+      "Email",
+      "Amount",
+      "Reference",
+      "Message",
+      "Date",
+    ];
     const csvContent = [
       headers.join(","),
       ...filteredDonors.map((d) =>
@@ -60,13 +76,19 @@ export default function DonorsTable() {
   };
 
   if (isLoading) return <LoadingSpinner />;
-  if (error) return <div className="p-6 text-center text-red-500">Failed to load donors.</div>;
+  if (error)
+    return (
+      <div className="p-6 text-center text-red-500">Failed to load donors.</div>
+    );
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
       <div className="p-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
         <h2 className="text-lg font-bold text-gray-900">
-          Donation Records <span className="ml-2 text-sm font-normal text-gray-500">({filteredDonors.length})</span>
+          Donation Records{" "}
+          <span className="ml-2 text-sm font-normal text-gray-500">
+            ({filteredDonors.length})
+          </span>
         </h2>
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="relative grow sm:grow-0">
@@ -79,7 +101,11 @@ export default function DonorsTable() {
               className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
             />
           </div>
-          <button onClick={handleDownload} className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg border border-gray-200" title="Download CSV">
+          <button
+            onClick={handleDownload}
+            className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg border border-gray-200"
+            title="Download CSV"
+          >
             <Download className="w-4 h-4" />
           </button>
         </div>
@@ -99,14 +125,25 @@ export default function DonorsTable() {
           <tbody className="divide-y divide-gray-100">
             {filteredDonors.length > 0 ? (
               filteredDonors.map((donor) => (
-                <tr key={donor._id} className="hover:bg-gray-50 transition-colors">
+                <tr
+                  key={donor._id}
+                  className="hover:bg-gray-50 transition-colors"
+                >
                   <td className="px-6 py-4 font-medium text-gray-900">
                     {donor.fullName}
-                    <p className="text-xs text-gray-500 font-normal">{donor.email}</p>
+                    <p className="text-xs text-gray-500 font-normal">
+                      {donor.email}
+                    </p>
                   </td>
-                  <td className="px-6 py-4 font-bold text-green-600">₦{formatAmount(donor.amount)}</td>
-                  <td className="px-6 py-4 font-mono text-xs">{donor.reference}</td>
-                  <td className="px-6 py-4">{new Date(donor.createdAt).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 font-bold text-green-600">
+                    ₦{formatAmount(donor.amount)}
+                  </td>
+                  <td className="px-6 py-4 font-mono text-xs">
+                    {donor.reference}
+                  </td>
+                  <td className="px-6 py-4">
+                    {new Date(donor.createdAt).toLocaleDateString()}
+                  </td>
                   <td className="px-6 py-4 text-right">
                     <button
                       onClick={() => setSelectedDonor(donor)}
@@ -121,7 +158,12 @@ export default function DonorsTable() {
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="px-6 py-12 text-center text-gray-500">No donation records found.</td>
+                <td
+                  colSpan={5}
+                  className="px-6 py-12 text-center text-gray-500"
+                >
+                  No donation records found.
+                </td>
               </tr>
             )}
           </tbody>
@@ -129,21 +171,45 @@ export default function DonorsTable() {
       </div>
 
       {selectedDonor && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setSelectedDonor(null)}>
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-xl font-bold text-gray-900 border-b pb-2">Donation Details</h3>
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedDonor(null)}
+        >
+          <div
+            className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-xl font-bold text-gray-900 border-b pb-2">
+              Donation Details
+            </h3>
             <div className="space-y-2">
-              <p><strong>Name:</strong> {selectedDonor.fullName}</p>
-              <p><strong>Email:</strong> {selectedDonor.email}</p>
-              <p><strong>Amount:</strong> ₦{formatAmount(selectedDonor.amount)}</p>
-              <p><strong>Reference:</strong> {selectedDonor.reference}</p>
-              <p><strong>Date:</strong> {new Date(selectedDonor.createdAt).toLocaleString()}</p>
+              <p>
+                <strong>Name:</strong> {selectedDonor.fullName}
+              </p>
+              <p>
+                <strong>Email:</strong> {selectedDonor.email}
+              </p>
+              <p>
+                <strong>Amount:</strong> ₦{formatAmount(selectedDonor.amount)}
+              </p>
+              <p>
+                <strong>Reference:</strong> {selectedDonor.reference}
+              </p>
+              <p>
+                <strong>Date:</strong>{" "}
+                {new Date(selectedDonor.createdAt).toLocaleString()}
+              </p>
               <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                 <p className="whitespace-pre-wrap">{selectedDonor.message}</p>
               </div>
             </div>
             <div className="flex justify-end">
-              <button onClick={() => setSelectedDonor(null)} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium">Close</button>
+              <button
+                onClick={() => setSelectedDonor(null)}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
