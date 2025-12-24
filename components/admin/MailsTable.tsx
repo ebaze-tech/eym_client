@@ -17,11 +17,13 @@ export interface Mail {
   createdAt: string;
 }
 
-const mailsFetcher = (url: string) =>
-  fetcher(url).then((data) => (data as { data: Mail[] }).data || []);
+const mailsFetcher = async (url: string): Promise<Mail[]> => {
+  const data = await fetcher(url);
+  return (data as { data: Mail[] }).data || [];
+};
 
 export default function MailsTable() {
-  const { data, error, isLoading } = useSWR("/all-mails", mailsFetcher);
+  const { data, error, isLoading } = useSWR<Mail[]>("/all-mails", mailsFetcher);
   const mails: Mail[] = data || [];
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMail, setSelectedMail] = useState<Mail | null>(null);
@@ -105,7 +107,7 @@ export default function MailsTable() {
                   </td>
                   <td className="px-6 py-4">{new Date(mail.createdAt).toLocaleDateString()}</td>
                   <td className="px-6 py-4 text-right">
-                    <button onClick={() => setSelectedMail(mail)} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                    <button onClick={() => setSelectedMail(mail)} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" aria-label="View Details">
                       <Eye className="w-4 h-4" />
                     </button>
                   </td>
@@ -125,7 +127,7 @@ export default function MailsTable() {
           <div className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
             <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
               <h3 className="text-xl font-bold text-gray-900">Message Details</h3>
-              <button onClick={() => setSelectedMail(null)} className="p-2 hover:bg-gray-200 rounded-full transition-colors">
+              <button onClick={() => setSelectedMail(null)} className="p-2 hover:bg-gray-200 rounded-full transition-colors" aria-label="Close">
                 <X className="w-5 h-5 text-gray-500" />
               </button>
             </div>
