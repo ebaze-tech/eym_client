@@ -17,6 +17,7 @@ import MemberDetailModal from "./MemberDetailModal";
 import EditMemberModal from "./EditMemberModal";
 import API from "@/api_handler/api";
 import { fetcher } from "@/lib/fetcher";
+import { escapeCsvField } from "@/lib/csv";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export interface Member {
@@ -59,35 +60,35 @@ interface ApiUser {
   updatedAt?: string;
 }
 
-const membersFetcher = () =>
-  fetcher("/all-registrations").then((data) => {
-    const users = Array.isArray(data) ? data : (data.data || []);
+const membersFetcher = async (url: string): Promise<Member[]> => {
+  const data = await fetcher(url);
+  const users = Array.isArray(data) ? data : ((data as { data: ApiUser[] }).data || []);
 
-    return users.map((user: ApiUser) => ({
-      id: user._id,
-      fullName: user.fullName,
-      gender: user.gender,
-      dateOfBirth: user.dateOfBirth,
-      religion: user.religion,
-      phoneNumber: user.phoneNumber,
-      residentialAddress: user.residentialAddress,
-      town: user.town,
-      city: user.city,
-      country: user.country,
-      compound: user.compound,
-      quarter: user.quarter,
-      occupation: user.occupation,
-      status:
-        user.status === "approved"
-          ? "Active"
-          : user.status === "rejected"
-          ? "Rejected"
-          : user.status,
-      joinedDate: user.createdAt
-        ? user.createdAt.split("T")[0]
-        : new Date().toISOString().split("T")[0],
-    }));
-  });
+  return users.map((user: ApiUser) => ({
+    id: user._id,
+    fullName: user.fullName,
+    gender: user.gender,
+    dateOfBirth: user.dateOfBirth,
+    religion: user.religion,
+    phoneNumber: user.phoneNumber,
+    residentialAddress: user.residentialAddress,
+    town: user.town,
+    city: user.city,
+    country: user.country,
+    compound: user.compound,
+    quarter: user.quarter,
+    occupation: user.occupation,
+    status:
+      user.status === "approved"
+        ? "Active"
+        : user.status === "rejected"
+        ? "Rejected"
+        : user.status,
+    joinedDate: user.createdAt
+      ? user.createdAt.split("T")[0]
+      : new Date().toISOString().split("T")[0],
+  }));
+};
 
 export default function MembersTable({
   statusFilter,
@@ -156,11 +157,12 @@ export default function MembersTable({
     if (isNew) {
       try {
         const res = await API.post("/member-registration", updatedMember);
-        if ((res.data as any).success) {
+        const responseData = res.data as { success: boolean; message?: string };
+        if (responseData.success) {
           mutate(); // Refresh data
           setIsEditOpen(false);
         } else {
-          alert((res.data as any).message || "Failed to create member");
+          alert(responseData.message || "Failed to create member");
         }
       } catch (e) {
         console.error(e);
@@ -259,7 +261,7 @@ export default function MembersTable({
           m.status,
           m.joinedDate,
         ]
-          .map((field) => `"${field}"`)
+          .map(escapeCsvField)
           .join(",")
       ),
     ].join("\n");
@@ -514,6 +516,7 @@ export default function MembersTable({
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
                 className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Previous Page"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -521,6 +524,7 @@ export default function MembersTable({
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
                 className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Next Page"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Search, Eye, Download, X, User, Mail as MailIcon, Phone, Calendar, MessageSquare } from "lucide-react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
+import { escapeCsvField } from "@/lib/csv";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export interface Mail {
@@ -39,7 +40,7 @@ export default function MailsTable() {
       headers.join(","),
       ...filteredMails.map((m) =>
         [m.firstName, m.lastName, m.email, m.phone, m.subject, m.message, m.createdAt]
-          .map((field) => `"${field}"`)
+          .map(escapeCsvField)
           .join(",")
       ),
     ].join("\n");

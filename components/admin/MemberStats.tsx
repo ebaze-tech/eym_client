@@ -3,13 +3,16 @@ import React from 'react';
 import { Users, UserCheck, Handshake, CreditCard } from 'lucide-react';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/fetcher';
-import { Member } from './MembersTable';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
+interface ApiListResponse<T = unknown> {
+  data: T[];
+}
+
 export default function MemberStats() {
-  const { data: membersData, isLoading: membersLoading } = useSWR('/all-registrations', fetcher);
-  const { data: partnersData, isLoading: partnersLoading } = useSWR('/all-partners', fetcher);
-  const { data: donorsData, isLoading: donorsLoading } = useSWR('/all-donors', fetcher);
+  const { data: membersData, isLoading: membersLoading } = useSWR('/all-registrations', (url: string) => fetcher(url) as Promise<ApiListResponse<{ status?: string }>>);
+  const { data: partnersData, isLoading: partnersLoading } = useSWR('/all-partners', (url: string) => fetcher(url) as Promise<ApiListResponse>);
+  const { data: donorsData, isLoading: donorsLoading } = useSWR('/all-donors', (url: string) => fetcher(url) as Promise<ApiListResponse>);
 
   if (membersLoading || partnersLoading || donorsLoading) {
     return <LoadingSpinner />;
@@ -20,7 +23,7 @@ export default function MemberStats() {
   const donors = donorsData?.data || [];
 
   const totalMembers = members.length;
-  const activeMembers = members.filter((m: Member) => m.status === 'approved' || m.status === 'Active').length;
+  const activeMembers = members.filter((m: { status?: string }) => m.status === 'approved').length;
   
   const stats = [
     {

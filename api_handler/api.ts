@@ -51,8 +51,12 @@ API.interceptors.response.use(
     if (typeof window !== "undefined" && error.response?.status === 401) {
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("user");
+      sessionStorage.removeItem("admin");
 
-      window.location.href = "/login?session_expired=true";
+      const isAdmin = window.location.pathname.startsWith("/admin");
+      window.location.href = isAdmin
+        ? "/admin/login?session_expired=true"
+        : "/login?session_expired=true";
     }
 
     return Promise.reject(error);

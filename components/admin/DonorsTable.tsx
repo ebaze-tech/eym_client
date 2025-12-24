@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Search, Eye, Download } from "lucide-react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
+import { escapeCsvField } from "@/lib/csv";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export interface Donor {
@@ -20,8 +21,10 @@ const formatAmount = (amount: string | number) => {
   return isNaN(num) ? String(amount) : num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
-const donorsFetcher = (url: string) =>
-  fetcher(url).then((data) => (data as { data: Donor[] }).data || []);
+const donorsFetcher = async (url: string): Promise<Donor[]> => {
+  const data = await fetcher(url);
+  return (data as { data: Donor[] }).data || [];
+};
 
 export default function DonorsTable() {
   const { data, error, isLoading } = useSWR<Donor[]>("/all-donors", donorsFetcher);
@@ -44,7 +47,7 @@ export default function DonorsTable() {
       headers.join(","),
       ...filteredDonors.map((d) =>
         [d.fullName, d.email, d.amount, d.reference, d.message, d.createdAt]
-          .map((field) => `"${field}"`)
+          .map(escapeCsvField)
           .join(",")
       ),
     ].join("\n");

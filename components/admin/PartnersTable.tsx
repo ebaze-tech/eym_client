@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Search, Eye, Download } from "lucide-react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
+import { escapeCsvField } from "@/lib/csv";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export interface Partner {
@@ -16,11 +17,13 @@ export interface Partner {
   createdAt: string;
 }
 
-const partnersFetcher = (url: string) =>
-  fetcher(url).then((data: any) => data.data || []);
+const partnersFetcher = async (url: string): Promise<Partner[]> => {
+  const data = await fetcher(url);
+  return (data as { data: Partner[] }).data || [];
+};
 
 export default function PartnersTable() {
-  const { data, error, isLoading } = useSWR("/all-partners", partnersFetcher);
+  const { data, error, isLoading } = useSWR<Partner[]>("/all-partners", partnersFetcher);
   const partners: Partner[] = Array.isArray(data) ? data : [];
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
@@ -38,7 +41,7 @@ export default function PartnersTable() {
       headers.join(","),
       ...filteredPartners.map((p) =>
         [p.organizationName, p.contactPerson, p.email, p.phoneNumber, p.partnershipType, p.message, p.createdAt]
-          .map((field) => `"${field}"`)
+          .map(escapeCsvField)
           .join(",")
       ),
     ].join("\n");
@@ -102,7 +105,7 @@ export default function PartnersTable() {
                   <td className="px-6 py-4">{partner.partnershipType}</td>
                   <td className="px-6 py-4">{new Date(partner.createdAt).toLocaleDateString()}</td>
                   <td className="px-6 py-4 text-right">
-                    <button onClick={() => setSelectedPartner(partner)} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                    <button onClick={() => setSelectedPartner(partner)} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" aria-label="View Details">
                       <Eye className="w-4 h-4" />
                     </button>
                   </td>

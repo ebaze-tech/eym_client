@@ -4,15 +4,11 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 export default function SessionGuard() {
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
-  useEffect(() => {
-    // If the user is not in the admin section, clear the admin session
-    if (!pathname.startsWith("/admin")) {
-      sessionStorage.removeItem("token");
-      sessionStorage.removeItem("admin");
-    }
-  }, [pathname]);
+  // useEffect(() => {
+  //   // Logic removed to prevent logging out admins on public pages
+  // }, [pathname]);
 
   return null;
 }
