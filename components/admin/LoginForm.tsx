@@ -3,7 +3,13 @@ import React, { useState } from "react";
 import { Lock, User, ArrowRight, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import API from "@/api_handler/api";
-import { AxiosError } from "axios";
+
+interface LoginResponse {
+  success: boolean;
+  token: string;
+  admin: unknown;
+  message?: string;
+}
 
 export default function LoginForm() {
   const router = useRouter();
@@ -29,7 +35,7 @@ export default function LoginForm() {
 
     try {
       const response = await API.post("/login", formData);
-      const data = response.data;
+      const data = response.data as LoginResponse;
 
       if (data.success) {
         sessionStorage.setItem("token", data.token);
@@ -41,7 +47,7 @@ export default function LoginForm() {
         );
       }
     } catch (err) {
-      const error = err as AxiosError<{ message: string }>;
+      const error = err as { response?: { data?: { message?: string } } };
       setError(
         error.response?.data?.message ||
           "An error occurred. Please try again later."
