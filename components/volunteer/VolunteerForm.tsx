@@ -13,7 +13,15 @@ import {
 } from "lucide-react";
 import API from "@/api_handler/api";
 
-const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
+interface VolunteerPayload {
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  occupation: string;
+  skills: string;
+  interests: string;
+  availability: string;
+}
 
 export default function VolunteerForm() {
   const [formData, setFormData] = useState({
@@ -44,7 +52,17 @@ export default function VolunteerForm() {
     setStatus("loading");
 
     try {
-      await API.post(`${NEXT_PUBLIC_API_URL}/volunteer`, formData);
+      const payload: VolunteerPayload = {
+        fullName: formData.fullName,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        occupation: formData.occupation,
+        skills: formData.skills,
+        interests: formData.interests,
+        availability: formData.availability,
+      };
+
+      await API.post("/volunteer", payload);
 
       setFormData({
         fullName: "",
@@ -56,9 +74,9 @@ export default function VolunteerForm() {
         availability: "",
       });
 
-      setStatus("success"); // <-- add this line
+      setStatus("success");
     } catch (error) {
-      console.log("Volunteer registration error", error);
+      console.error("Volunteer registration error", error);
       setStatus("error");
     }
   };

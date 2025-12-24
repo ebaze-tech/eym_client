@@ -23,7 +23,7 @@ export default function LeadershipHero() {
             LEADERSHIP PROGRAM
           </h1>
           <p className="text-base md:text-lg leading-relaxed font-light text-blue-50">
-            From the ancestral crown of Olaribikusi to today's community champions, leadership in Eruwa has always been about service, unity, and foresight. Here, you'll meet the modern-day torchbearers—traditional rulers, youth leaders, and development pioneers—who honor our past while building our future.
+            From the ancestral crown of Olaribikusi to today&apos;s community champions, leadership in Eruwa has always been about service, unity, and foresight. Here, you&apos;ll meet the modern-day torchbearers—traditional rulers, youth leaders, and development pioneers—who honor our past while building our future.
           </p>
         </div>
       </div>

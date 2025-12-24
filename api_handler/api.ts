@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_NEXT_PUBLIC_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -15,8 +15,8 @@ API.interceptors.request.use(
   (config) => {
     // Next.js runs on server + client → guard window
     if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      const user = localStorage.getItem("user");
+      const token = sessionStorage.getItem("token");
+      const user = sessionStorage.getItem("user");
 
       if (token) {
         if (config.headers) {
@@ -25,13 +25,13 @@ API.interceptors.request.use(
 
         if (user) {
           try {
-            const userData = JSON.parse(user);
+            // const userData = JSON.parse(user);
 
             // Example (optional)
             // config.headers["X-User-Id"] = userData.id;
             // config.headers["X-User-Role"] = userData.role;
-          } catch (err) {
-            console.warn("Invalid user in localStorage");
+          } catch {
+            console.warn("Invalid user in sessionStorage");
           }
         }
       }
@@ -49,10 +49,14 @@ API.interceptors.response.use(
   (response) => response,
   (error) => {
     if (typeof window !== "undefined" && error.response?.status === 401) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
+      sessionStorage.removeItem("admin");
 
-      window.location.href = "/login?session_expired=true";
+      const isAdmin = window.location.pathname.startsWith("/admin");
+      window.location.href = isAdmin
+        ? "/admin/login?session_expired=true"
+        : "/login?session_expired=true";
     }
 
     return Promise.reject(error);

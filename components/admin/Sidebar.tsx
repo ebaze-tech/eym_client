@@ -8,6 +8,9 @@ import {
   LogOut,
   FileText,
   ChevronRight,
+  Mail,
+  Handshake,
+  CreditCard,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -21,7 +24,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [adminName, setAdminName] = useState("Admin User");
 
   useEffect(() => {
-    const adminData = localStorage.getItem('admin');
+    const adminData = sessionStorage.getItem('admin');
     if (adminData) {
       try {
         const admin = JSON.parse(adminData);
@@ -36,8 +39,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   const handleLogout = (e: React.MouseEvent) => {
     e.preventDefault();
-    localStorage.removeItem('token');
-    localStorage.removeItem('admin');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('admin');
     router.push('/admin/login');
   };
 
@@ -55,9 +58,21 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       exact: false,
     },
     {
-      name: "Requests",
-      href: "/admin/dashboard/requests",
-      icon: FileText,
+      name: "Mails",
+      href: "/admin/dashboard/mails",
+      icon: Mail,
+      exact: false,
+    },
+    {
+      name: "Partners",
+      href: "/admin/dashboard/partners",
+      icon: Handshake,
+      exact: false,
+    },
+    {
+      name: "Donors",
+      href: "/admin/dashboard/donors",
+      icon: CreditCard,
       exact: false,
     },
   ];

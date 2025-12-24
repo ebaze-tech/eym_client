@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutGrid, ArrowUpRight, Camera } from 'lucide-react';
+import { ArrowUpRight, Camera } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { galleryData } from '@/lib/galleryData';
