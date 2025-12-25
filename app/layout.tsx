@@ -11,7 +11,11 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: "EYM - Eruwa Youth Movement",
-  description: "Community Action, Tangible Results. Transforming vision into community reality.",
+  description:
+    "Community Action, Tangible Results. Transforming vision into community reality.",
+  verification: {
+    google: "gU6SOjJX7YpzcqtZhc5pDbYqK4BHhlgXWrh4MqAIwUE",
+  },
 };
 
 export default function RootLayout({
@@ -21,9 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${plusJakartaSans.variable} antialiased`}
-      >
+      <body className={`${plusJakartaSans.variable} antialiased`}>
         <SessionGuard />
         {children}
       </body>
